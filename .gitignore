@@ -6,6 +6,7 @@ target/
 
 /gradle
 /build
+/.gradle
 
 ### STS ###
 .apt_generated

@@ -32,8 +32,9 @@ CREATE TABLE tasks
     time_limit        DECIMAL      NOT NULL,
     attempts_amount   SMALLINT     NOT NULL,
     classification_id INTEGER REFERENCES classifications(classification_id),
-    difficulty        INTEGER      NOT NULL,
-    is_private        BOOLEAN      NOT NULL
+    difficulty        DECIMAL      NOT NULL,
+    is_private        BOOLEAN      NOT NULL,
+    grade             DECIMAL      NOT NULL
 );
 
 CREATE TABLE unique_contest_tasks

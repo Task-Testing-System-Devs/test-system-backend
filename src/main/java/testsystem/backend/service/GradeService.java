@@ -10,11 +10,22 @@ import testsystem.backend.model.contest.Contest;
 import testsystem.backend.model.contest.ContestConn;
 import testsystem.backend.model.contest.Task;
 import testsystem.backend.model.contest.TaskConn;
+import testsystem.backend.model.education.Department;
+import testsystem.backend.model.education.DepartmentConn;
+import testsystem.backend.model.education.EdGroup;
+import testsystem.backend.model.education.EdGroupConn;
 import testsystem.backend.model.user.User;
+import testsystem.backend.model.user.UserInfo;
+import testsystem.backend.model.user.UserInfoForRatingDownload;
 import testsystem.backend.repository.contest.ContestConnRepository;
 import testsystem.backend.repository.contest.ContestRepository;
 import testsystem.backend.repository.contest.TaskConnRepository;
 import testsystem.backend.repository.contest.TaskRepository;
+import testsystem.backend.repository.education.DepartmentConnRepository;
+import testsystem.backend.repository.education.DepartmentRepository;
+import testsystem.backend.repository.education.EdGroupConnRepository;
+import testsystem.backend.repository.education.EdGroupRepository;
+import testsystem.backend.repository.user.UserInfoRepository;
 import testsystem.backend.repository.user.UserRepository;
 
 import java.util.*;
@@ -24,6 +35,16 @@ public class GradeService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
+    private DepartmentConnRepository departmentConnRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
+    @Autowired
+    private EdGroupConnRepository edGroupConnRepository;
+    @Autowired
+    private EdGroupRepository edGroupRepository;
     @Autowired
     private ContestConnRepository contestConnRepository;
     @Autowired
@@ -40,10 +61,47 @@ public class GradeService {
         return ResponseEntity.ok(generateResponse(users));
     }
 
+    public List<UserInfoForRatingDownload> getSortedByMarksUsersForDownload() {
+        List<User> users = userRepository.findAll();
+        users.sort(Comparator.comparing(this::getContestsAverageUserGrade).reversed());
+        users.sort(Comparator.comparing(this::getContestsAmountOfUser).reversed());
+
+        return generateUsersListForDownload(users);
+    }
+
+    private List<UserInfoForRatingDownload> generateUsersListForDownload(List<User> users) {
+        List<UserInfoForRatingDownload> userInfoForRatingDownloads = new ArrayList<>();
+        for (int i = 0; i < users.size(); ++i) {
+            User user = users.get(i);
+            UserInfo userInfo = userInfoRepository.getUserInfoByUserId(user.getId()).get();
+            Optional<DepartmentConn> departmentConn = departmentConnRepository.findDepartmentConnByUserId(user.getId());
+            Optional<Department> department = departmentRepository.findById(departmentConn.get().getDepartmentId());
+            Optional<EdGroupConn> edGroupConn = edGroupConnRepository.findEdGroupConnByDepartmentId(department.get().getId());
+            Optional<EdGroup> edGroup = edGroupRepository.findById(edGroupConn.get().getEdGroupId());
+
+            userInfoForRatingDownloads.add(UserInfoForRatingDownload.builder()
+                    .ratingPosition(i + 1)
+                    .lastName(userInfo.getLastName())
+                    .firstName(userInfo.getFirstName())
+                    .email(user.getEmail())
+                    .department(department.get().getTitle())
+                    .groupName(edGroup.get().getTitle())
+                    .build());
+        }
+        return userInfoForRatingDownloads;
+    }
+
     public ResponseEntity<?> getGradesByTasksAmount() {
         List<User> users = userRepository.findAll();
         users.sort(Comparator.comparing(this::getAllSolvedTasksAmount).reversed());
         return ResponseEntity.ok(generateResponse(users));
+    }
+
+    public List<UserInfoForRatingDownload> getSortedByTasksAmountUsersForDownload() {
+        List<User> users = userRepository.findAll();
+        users.sort(Comparator.comparing(this::getAllSolvedTasksAmount).reversed());
+
+        return generateUsersListForDownload(users);
     }
 
     private List<UserShortInfoPair> generateResponse(List<User> users) {
@@ -90,5 +148,4 @@ public class GradeService {
         }
         return totalTasksAmount;
     }
-
 }

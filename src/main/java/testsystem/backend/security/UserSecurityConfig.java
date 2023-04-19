@@ -6,18 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import testsystem.backend.filter.JwtAuthFilter;
@@ -39,9 +35,9 @@ public class UserSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/register","/api/auth/login", "/api/contest/get-info", "/api/grade/**").permitAll()
+                .requestMatchers("/api/auth/register","/api/auth/login", "/api/contest/get-info").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/profile/**")
+                .authorizeHttpRequests().requestMatchers("/api/profile/**", "/api/grade/**")
                 .authenticated().and()
                 .authorizeHttpRequests().requestMatchers("/api/admin/add-teacher").permitAll()
                 .and()

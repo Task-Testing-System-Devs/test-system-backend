@@ -6,4 +6,7 @@ import testsystem.backend.model.contest.Contest;
 import java.util.Optional;
 
 public interface ContestRepository extends JpaRepository<Contest, Integer> {
+
+    Optional<Contest> findByTitle(String title);
+
 }

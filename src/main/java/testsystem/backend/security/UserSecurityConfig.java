@@ -37,7 +37,7 @@ public class UserSecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/register","/api/auth/login", "/api/contest/get-info").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/profile/**", "/api/grade/**")
+                .authorizeHttpRequests().requestMatchers("/api/profile/**", "/api/grade/**", "/api/solutions/**")
                 .authenticated().and()
                 .authorizeHttpRequests().requestMatchers("/api/admin/add-teacher").permitAll()
                 .and()

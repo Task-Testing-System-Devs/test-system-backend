@@ -65,7 +65,8 @@ CREATE TABLE solutions
     language_id     INTEGER REFERENCES languages(language_id),
     status_id       INTEGER REFERENCES status(status_id),
     used_time       DECIMAL NOT NULL,
-    used_memory     DECIMAL NOT NULL
+    used_memory     DECIMAL NOT NULL,
+    error_test      varchar(10) NOT NULL
 );
 
 CREATE TABLE users_info

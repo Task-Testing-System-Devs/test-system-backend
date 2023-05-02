@@ -1,7 +1,6 @@
 package testsystem.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testsystem.backend.dto.UserShortInfo;
@@ -28,6 +27,7 @@ import testsystem.backend.repository.education.EdGroupRepository;
 import testsystem.backend.repository.user.UserInfoRepository;
 import testsystem.backend.repository.user.UserRepository;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -107,9 +107,30 @@ public class GradeService {
     private List<UserShortInfoPair> generateResponse(List<User> users) {
         List<UserShortInfoPair> responseModels = new ArrayList<>();
         for (var user : users) {
+            Optional<UserInfo> userInfo = userInfoRepository.getUserInfoByUserId(user.getId());
+            if (Objects.equals(user.getRole(), "teacher")) {
+                responseModels.add(new UserShortInfoPair(
+                        user.getId(),
+                        new UserShortInfo(
+                                user.getEmail(), user.getRole(),
+                                userInfo.orElseThrow().getFirstName(), userInfo.orElseThrow().getLastName(),
+                                userInfo.orElseThrow().getMiddleName(), "null", "null"
+                        ))
+                );
+                continue;
+            }
+            Optional<DepartmentConn> departmentConn = departmentConnRepository.findDepartmentConnByUserId(user.getId());
+            Optional<Department> department = departmentRepository.findById(departmentConn.orElseThrow().getDepartmentId());
+            Optional<EdGroupConn> edGroupConn = edGroupConnRepository.findEdGroupConnByDepartmentId(department.orElseThrow().getId());
+            Optional<EdGroup> edGroup = edGroupRepository.findById(edGroupConn.orElseThrow().getEdGroupId());
             responseModels.add(new UserShortInfoPair(
                     user.getId(),
-                    new UserShortInfo(user.getEmail(), user.getRole()))
+                    new UserShortInfo(
+                            user.getEmail(), user.getRole(),
+                            userInfo.orElseThrow().getFirstName(), userInfo.orElseThrow().getLastName(),
+                            userInfo.orElseThrow().getMiddleName(), department.orElseThrow().getTitle(),
+                            edGroup.orElseThrow().getTitle()
+                    ))
             );
         }
         return responseModels;

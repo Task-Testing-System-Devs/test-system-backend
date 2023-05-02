@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import testsystem.backend.dto.AuthRequest;
+import testsystem.backend.dto.LoginResponse;
 import testsystem.backend.dto.UserRegisterRequest;
 import testsystem.backend.service.AuthService;
 import testsystem.backend.service.JwtService;
@@ -47,7 +48,14 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
             if (authentication.isAuthenticated()) {
                 String token = jwtService.generateToken(authRequest.getEmail());
-                return ResponseEntity.ok(token);
+                String role = authService.getRole(authRequest.getEmail());
+
+                return ResponseEntity.ok(
+                        LoginResponse.builder()
+                                .token(token)
+                                .role(role)
+                                .build()
+                );
             }
             return ResponseEntity.badRequest().body("Invalid user request");
         } catch (Exception exception) {

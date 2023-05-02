@@ -24,9 +24,7 @@ public class UserProfileInfoResponse {
     @NonNull
     private String email;
 
-    @NonNull
     private String department;
 
-    @NonNull
     private String group;
 }

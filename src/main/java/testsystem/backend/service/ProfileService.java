@@ -35,7 +35,7 @@ public class ProfileService {
     @Autowired
     private EdGroupRepository edGroupRepository;
 
-    public ResponseEntity<?> getProfileInfo(String email) {
+    public ResponseEntity<?> getStudentProfileInfo(String email) {
         // Extract user main info.
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
@@ -81,6 +81,30 @@ public class ProfileService {
                 .middle_name(userInfo.get().getMiddleName())
                 .department(department.get().getTitle())
                 .group(edGroup.get().getTitle())
+                .build();
+        return ResponseEntity.ok(profileInfo);
+    }
+
+    public ResponseEntity<?> getTeacherProfileInfo(String email) {
+        // Extract user main info.
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return ResponseEntity.badRequest().body("No user with email: <" + email + "> found");
+        }
+
+        // Extract user personal info.
+        Optional<UserInfo> userInfo = userInfoRepository.getUserInfoByUserId(user.get().getId());
+        if (userInfo.isEmpty()) {
+            return ResponseEntity.badRequest().body("No user personal info with email: <" + email + "> found");
+        }
+
+        // Build response about user profile info.
+        UserProfileInfoResponse profileInfo = UserProfileInfoResponse.builder()
+                .id(user.get().getId())
+                .email(user.get().getEmail())
+                .first_name(userInfo.get().getFirstName())
+                .last_name(userInfo.get().getLastName())
+                .middle_name(userInfo.get().getMiddleName())
                 .build();
         return ResponseEntity.ok(profileInfo);
     }

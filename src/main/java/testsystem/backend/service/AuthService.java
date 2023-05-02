@@ -93,4 +93,7 @@ public class AuthService {
         return ResponseEntity.ok("User was successfully created and registered");
     }
 
+    public String getRole(String email) {
+        return userRepository.findByEmail(email).get().getRole();
+    }
 }

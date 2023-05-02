@@ -15,12 +15,23 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @GetMapping("/get-info")
-    public ResponseEntity<?> getProfileInfo(
+    @GetMapping("/get-student-info")
+    public ResponseEntity<?> getStudentProfileInfo(
             @RequestHeader("Authorization") String token
     ) {
         try {
-            return profileService.getProfileInfo(jwtService.extractUsername(token.replace("Bearer ", "")));
+            return profileService.getStudentProfileInfo(jwtService.extractUsername(token.replace("Bearer ", "")));
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/get-teacher-info")
+    public ResponseEntity<?> getTeacherProfileInfo(
+            @RequestHeader("Authorization") String token
+    ) {
+        try {
+            return profileService.getTeacherProfileInfo(jwtService.extractUsername(token.replace("Bearer ", "")));
         } catch (Exception exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

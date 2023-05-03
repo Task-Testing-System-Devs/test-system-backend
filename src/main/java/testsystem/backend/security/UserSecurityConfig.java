@@ -18,6 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import testsystem.backend.filter.JwtAuthFilter;
 
+/**
+ * Configuration class for the User Security in the application.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -26,18 +29,39 @@ public class UserSecurityConfig {
     @Autowired
     private JwtAuthFilter authFilter;
 
+    /**
+     * Returns an instance of UserCredsUserDetailsService.
+     *
+     * @return instance of UserCredsUserDetailsService.
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserCredsUserDetailsService();
     }
 
+    /**
+     * Configures the SecurityFilterChain for the application.
+     *
+     * @param http HttpSecurity object to configure SecurityFilterChain.
+     * @return SecurityFilterChain.
+     * @throws Exception In case of configuration errors.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/register","/api/auth/login", "/api/contest/get-info").permitAll()
+                .requestMatchers(
+                        "/api/auth/register",
+                        "/api/auth/login",
+                        "/api/contest/get-info"
+                ).permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/profile/**", "/api/grade/**", "/api/solutions/**", "/api/contest/**")
+                .authorizeHttpRequests().requestMatchers(
+                        "/api/profile/**",
+                        "/api/grade/**",
+                        "/api/solutions/**",
+                        "/api/contest/**"
+                )
                 .authenticated().and()
                 .authorizeHttpRequests().requestMatchers("/api/admin/add-teacher").permitAll()
                 .and()
@@ -49,16 +73,33 @@ public class UserSecurityConfig {
                 .build();
     }
 
+    /**
+     * Returns an instance of PasswordEncoder for encoding passwords.
+     *
+     * @return Instance of BCryptPasswordEncoder.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Returns an instance of AuthenticationManager.
+     *
+     * @param config AuthenticationConfiguration object.
+     * @return Instance of AuthenticationManager.
+     * @throws Exception In case of configuration errors.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
+    /**
+     * Returns an instance of AuthenticationProvider with the UserDetailsService and PasswordEncoder.
+     *
+     * @return Instance of DaoAuthenticationProvider.
+     */
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -66,5 +107,4 @@ public class UserSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-
 }

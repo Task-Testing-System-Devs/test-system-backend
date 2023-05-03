@@ -10,18 +10,28 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Class implementing Spring Security's UserDetails interface to represent the user's login credentials and roles.
+ */
 public class UserCredsUserDetails implements UserDetails {
 
     private final String email;
     private final String password;
     private final List<GrantedAuthority> authorities;
 
+    /**
+     * Constructs a new UserCredsUserDetails object based on the given User object.
+     *
+     @param user User object from which to extract the user's credentials and roles.
+     */
     public UserCredsUserDetails(User user) {
         email = user.getEmail();
         password = user.getPassword();
-        authorities = Arrays.stream(user.getRole().split(","))
+        authorities = Arrays.stream(
+                user.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()
+                );
     }
 
     @Override

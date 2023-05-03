@@ -20,6 +20,9 @@ import testsystem.backend.repository.education.EdGroupRepository;
 import testsystem.backend.repository.user.UserInfoRepository;
 import testsystem.backend.repository.user.UserRepository;
 
+/**
+ * This service class handles user authentication-related functionalities.
+ */
 @Service
 public class AuthService {
 
@@ -39,6 +42,13 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Registers a new user to the system.
+     *
+     * @param user The user registration request object.
+     * @return Response entity containing the result of the registration.
+     * @throws DataIntegrityViolationException If there is a data integrity violation.
+     */
     @Transactional
     public ResponseEntity<?> register(UserRegisterRequest user) throws DataIntegrityViolationException {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -93,7 +103,13 @@ public class AuthService {
         return ResponseEntity.ok("User was successfully created and registered");
     }
 
+    /**
+     * Retrieves the role of a user with the given email.
+     *
+     * @param email Email of the user.
+     * @return Role of the user.
+     */
     public String getRole(String email) {
-        return userRepository.findByEmail(email).get().getRole();
+        return userRepository.findByEmail(email).orElseThrow().getRole();
     }
 }

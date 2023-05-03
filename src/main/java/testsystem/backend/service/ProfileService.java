@@ -19,6 +19,9 @@ import testsystem.backend.repository.user.UserRepository;
 
 import java.util.Optional;
 
+/**
+ * This class provides the implementation for profile service.
+ */
 @Service
 public class ProfileService {
 
@@ -35,6 +38,13 @@ public class ProfileService {
     @Autowired
     private EdGroupRepository edGroupRepository;
 
+    /**
+     * Retrieves the student profile information based on their email.
+     *
+     * @param email Email of the student to retrieve the profile information for.
+     * @return ResponseEntity with the student profile information if the student is found,
+     * otherwise a bad request ResponseEntity with an error message.
+     */
     public ResponseEntity<?> getStudentProfileInfo(String email) {
         // Extract user main info.
         Optional<User> user = userRepository.findByEmail(email);
@@ -82,9 +92,17 @@ public class ProfileService {
                 .department(department.get().getTitle())
                 .group(edGroup.get().getTitle())
                 .build();
+
         return ResponseEntity.ok(profileInfo);
     }
 
+    /**
+     * Returns the profile information for a teacher with the given email.
+     *
+     * @param email Email of the teacher.
+     * @return ResponseEntity containing either the teacher's profile information or a bad request
+     * response with an error message.
+     */
     public ResponseEntity<?> getTeacherProfileInfo(String email) {
         // Extract user main info.
         Optional<User> user = userRepository.findByEmail(email);
@@ -106,6 +124,7 @@ public class ProfileService {
                 .last_name(userInfo.get().getLastName())
                 .middle_name(userInfo.get().getMiddleName())
                 .build();
+
         return ResponseEntity.ok(profileInfo);
     }
 }

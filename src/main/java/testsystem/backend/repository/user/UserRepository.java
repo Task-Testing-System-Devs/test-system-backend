@@ -6,6 +6,9 @@ import testsystem.backend.model.user.User;
 
 import java.util.Optional;
 
+/**
+ * Repository corresponding to User model and same table in database.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 

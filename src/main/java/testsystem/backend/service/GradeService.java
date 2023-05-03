@@ -244,7 +244,7 @@ public class GradeService {
             List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.orElseThrow().getId());
             totalTasksAmount += taskConns.size();
         }
-        
+
         return totalTasksAmount;
     }
 }

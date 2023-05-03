@@ -1,23 +1,15 @@
 package testsystem.backend.controller;
 
-import org.graalvm.polyglot.*;
-import org.graalvm.polyglot.proxy.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import testsystem.backend.dto.ContestRequest;
 import testsystem.backend.service.ContestService;
 import testsystem.backend.service.JwtService;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Controller class for handling HTTP requests related to contests.
+ */
 @RestController
 @RequestMapping("/api/contest")
 public class ContestController {
@@ -27,16 +19,25 @@ public class ContestController {
     @Autowired
     private ContestService contestService;
 
+    /**
+     * Retrieves the contest information and adds it to the database.
+     *
+     * @param token          The token from the HTTP request header.
+     * @param contestRequest The ContestRequest DTO that holds the contest information.
+     * @return ResponseEntity A response that contains the result of the operation and the HTTP status.
+     */
     @GetMapping("/add")
     public ResponseEntity<?> getContestInfo(
             @RequestHeader("Authorization") String token,
             @RequestBody ContestRequest contestRequest
             ) {
         try {
-            return contestService.addContest(jwtService.extractUsername(token.replace("Bearer ", "")), contestRequest);
+            return contestService.addContest(
+                    jwtService.extractUsername(token.replace("Bearer ", "")),
+                    contestRequest
+            );
         } catch (Exception exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
-
 }

@@ -12,9 +12,11 @@ import testsystem.backend.model.user.UserInfo;
 import testsystem.backend.repository.user.UserInfoRepository;
 import testsystem.backend.repository.user.UserRepository;
 
+/**
+ * This class provides the implementation for admin service.
+ */
 @Service
 public class AdminService {
-
 
     @Autowired
     private UserRepository userRepository;
@@ -23,12 +25,19 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * This method creates a new teacher and saves all info to the "users" and "users_info" tables.
+     *
+     * @param newTeacher - Information about the new teacher to be registered.
+     * @return ResponseEntity with a message about the result of the teacher registration.
+     */
     @Transactional
     public ResponseEntity<?> addTeacher(TeacherRegisterRequest newTeacher) {
         if (userRepository.findByEmail(newTeacher.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Teacher with such email address already exists");
         }
 
+        // Encode password.
         newTeacher.setPassword(passwordEncoder.encode(newTeacher.getPassword()));
 
         // Insert into "users" table.

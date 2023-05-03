@@ -2,6 +2,9 @@ package testsystem.backend.dto;
 
 import lombok.*;
 
+/**
+ * DTO class with fields role and token for login response.
+ */
 @Data
 @Builder
 @NoArgsConstructor

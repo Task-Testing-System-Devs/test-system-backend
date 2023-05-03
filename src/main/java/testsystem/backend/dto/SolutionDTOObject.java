@@ -2,6 +2,9 @@ package testsystem.backend.dto;
 
 import lombok.*;
 
+/**
+ * DTO class with many fields for sending request adding solution or retrieving data and sending response.
+ */
 @Data
 @Builder
 @NoArgsConstructor

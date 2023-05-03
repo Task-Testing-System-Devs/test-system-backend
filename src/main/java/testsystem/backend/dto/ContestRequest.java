@@ -5,6 +5,9 @@ import lombok.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * DTO class with fields title, start_time, finish_time and tasks for contest adding request.
+ */
 @Data
 @Builder
 @NoArgsConstructor

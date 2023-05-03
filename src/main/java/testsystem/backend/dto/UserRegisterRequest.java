@@ -3,6 +3,9 @@ package testsystem.backend.dto;
 import jakarta.annotation.Nullable;
 import lombok.*;
 
+/**
+ * DTO class with many fields about personal info for user registration request.
+ */
 @Data
 @Builder
 @NoArgsConstructor

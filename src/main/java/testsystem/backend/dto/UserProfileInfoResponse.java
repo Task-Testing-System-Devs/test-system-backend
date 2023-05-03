@@ -3,6 +3,9 @@ package testsystem.backend.dto;
 import jakarta.annotation.Nullable;
 import lombok.*;
 
+/**
+ * DTO class with many fields about user info for profile info response for teacher and student.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,4 +30,5 @@ public class UserProfileInfoResponse {
     private String department;
 
     private String group;
+
 }

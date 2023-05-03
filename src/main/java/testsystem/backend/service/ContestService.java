@@ -20,7 +20,9 @@ import testsystem.backend.repository.user.UserRepository;
 import java.util.Objects;
 import java.util.Optional;
 
-
+/**
+ * This service class handles contest-related functionalities.
+ */
 @Service
 public class ContestService {
 
@@ -35,6 +37,13 @@ public class ContestService {
     @Autowired
     private TaskConnRepository taskConnRepository;
 
+    /**
+     * Adds a new contest to the system.
+     *
+     @param email The email of user adding the contest.
+     @param contestRequest The ContestRequest object containing details of new contest.
+     @return ResponseEntity a response object indicating the success or failure of the request.
+     */
     @Transactional
     public ResponseEntity<?> addContest(String email, ContestRequest contestRequest) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -42,7 +51,8 @@ public class ContestService {
             return ResponseEntity.badRequest().body("The user with such email does not exist");
         }
         if (!Objects.equals(user.get().getRole(), "teacher")) {
-            return ResponseEntity.badRequest().body("The user with role: <" + user.get().getRole() + "> is not permitted to add contest");
+            return ResponseEntity.badRequest()
+                    .body("The user with role: <" + user.get().getRole() + "> is not permitted to add contest");
         }
 
         Contest contest = Contest.builder()
@@ -56,6 +66,7 @@ public class ContestService {
         contestRepository.save(contest);
 
         for (var requestTask : contestRequest.getTasks()) {
+
             Classification classification = Classification.builder()
                     .title(requestTask.getClassification_title())
                     .build();

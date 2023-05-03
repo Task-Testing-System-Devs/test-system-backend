@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * This class provides the implementation for solution service.
+ */
 @Service
 public class SolutionService {
 
@@ -52,7 +55,13 @@ public class SolutionService {
     @Autowired
     private TaskRepository taskRepository;
 
-
+    /**
+     * Retrieves a list of solutions made by the user with the specified email address.
+     *
+     * @param email Email address of the user to retrieve solutions for.
+     * @return ResponseEntity object containing either the list of SolutionDTOObject responses or an error message
+     * if the user has no solutions.
+     */
     public ResponseEntity<?> getUserSolutions(String email) {
         // Extract user main info.
         Optional<User> user = userRepository.findByEmail(email);
@@ -93,6 +102,13 @@ public class SolutionService {
         return ResponseEntity.ok(solutions);
     }
 
+    /**
+     * Adds a new solution to the database for the specified user.
+     *
+     * @param email Email of the user to add a solution for.
+     * @param solutionDTOObject Solution DTO object containing the information about the solution.
+     * @return ResponseEntity object indicating whether the operation was successful or not.
+     */
     @Transactional
     public ResponseEntity<?> addUserSolution(String email, SolutionDTOObject solutionDTOObject) {
         // Extract user main info.

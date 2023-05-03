@@ -3,6 +3,9 @@ package testsystem.backend.model.education;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "ed_groups_conn" table in database.
+ */
 @Entity
 @Table(name = "ed_groups_conn")
 @NoArgsConstructor
@@ -26,4 +29,5 @@ public class EdGroupConn {
     @Getter
     @Setter
     private Integer departmentId;
+
 }

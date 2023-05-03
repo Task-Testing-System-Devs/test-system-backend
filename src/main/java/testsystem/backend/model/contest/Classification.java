@@ -3,6 +3,9 @@ package testsystem.backend.model.contest;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "classifications" table in database.
+ */
 @Entity
 @Table(name = "classifications")
 @Builder

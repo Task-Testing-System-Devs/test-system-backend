@@ -3,6 +3,9 @@ package testsystem.backend.model.contest;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "tasks" table in database.
+ */
 @Entity
 @Table(name = "tasks")
 @Builder
@@ -62,6 +65,11 @@ public class Task {
     @Setter
     private Double grade;
 
+    /**
+     * Returns grade got for task.
+     *
+     * @return Grade counted by multiplication of grade and task difficulty.
+     */
     public Double getTaskGrade() {
         return grade * difficulty;
     }

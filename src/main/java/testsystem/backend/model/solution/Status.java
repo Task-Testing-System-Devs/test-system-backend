@@ -3,6 +3,9 @@ package testsystem.backend.model.solution;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "status" table in database.
+ */
 @Entity
 @Table(name = "status")
 @NoArgsConstructor

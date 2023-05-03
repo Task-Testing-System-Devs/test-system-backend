@@ -3,6 +3,9 @@ package testsystem.backend.model.solution;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "languages" table in database.
+ */
 @Entity
 @Table(name = "languages")
 @NoArgsConstructor

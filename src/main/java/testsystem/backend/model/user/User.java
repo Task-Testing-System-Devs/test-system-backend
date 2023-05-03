@@ -3,6 +3,9 @@ package testsystem.backend.model.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "users" table in database.
+ */
 @Entity
 @Table(name = "users")
 @Builder
@@ -31,4 +34,5 @@ public class User {
     @Getter
     @Setter
     private String password;
+
 }

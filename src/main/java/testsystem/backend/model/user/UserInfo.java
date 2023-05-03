@@ -3,6 +3,9 @@ package testsystem.backend.model.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "users_info" table in database.
+ */
 @Entity
 @Table(name = "users_info")
 @NoArgsConstructor
@@ -36,4 +39,5 @@ public class UserInfo {
     @Getter
     @Setter
     private String middleName;
+
 }

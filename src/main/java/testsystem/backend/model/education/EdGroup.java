@@ -3,6 +3,9 @@ package testsystem.backend.model.education;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "ed_groups" table in database.
+ */
 @Entity
 @Table(name = "ed_groups")
 @NoArgsConstructor
@@ -21,4 +24,5 @@ public class EdGroup {
     @Getter
     @Setter
     private String title;
+
 }

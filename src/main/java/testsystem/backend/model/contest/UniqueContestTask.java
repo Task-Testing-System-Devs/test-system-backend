@@ -3,6 +3,9 @@ package testsystem.backend.model.contest;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "unique_contest_tasks" table in database.
+ */
 @Entity
 @Table(name = "unique_contest_tasks")
 @NoArgsConstructor

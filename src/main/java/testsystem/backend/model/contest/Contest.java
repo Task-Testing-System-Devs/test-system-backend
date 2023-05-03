@@ -5,6 +5,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class-model corresponding to "contests" table in database.
+ */
 @Entity
 @Table(name = "contests")
 @Builder

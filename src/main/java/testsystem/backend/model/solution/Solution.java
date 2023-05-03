@@ -3,6 +3,9 @@ package testsystem.backend.model.solution;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Class-model corresponding to "solutions" table in database.
+ */
 @Entity
 @Table(name = "solutions")
 @NoArgsConstructor

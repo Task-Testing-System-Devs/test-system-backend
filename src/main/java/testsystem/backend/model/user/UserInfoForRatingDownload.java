@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO object with many fields for rating download.
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,14 +15,19 @@ public class UserInfoForRatingDownload {
 
     @Getter
     private Integer ratingPosition;
+
     @Getter
     private String lastName;
+
     @Getter
     private String firstName;
+
     @Getter
     private String email;
+
     @Getter
     private String department;
+
     @Getter
     private String groupName;
 
@@ -27,4 +35,5 @@ public class UserInfoForRatingDownload {
     public String toString() {
         return "Rating position;Lastname;First name;Email;Department;Group name";
     }
+
 }

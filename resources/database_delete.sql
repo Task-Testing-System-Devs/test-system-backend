@@ -1,3 +1,5 @@
+-- This file contains script for consequent delete of all tables in test-system database.
+
 drop table users_info;
 
 drop table user_solutions;

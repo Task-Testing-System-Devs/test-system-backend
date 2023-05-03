@@ -1,3 +1,5 @@
+-- This file contains script for consequent creation of all tables in test-system database.
+
 CREATE TABLE users
 (
     user_id     SERIAL PRIMARY KEY,

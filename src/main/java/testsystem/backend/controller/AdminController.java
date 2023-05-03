@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import testsystem.backend.dto.TeacherRegisterRequest;
 import testsystem.backend.service.AdminService;
 
+/**
+ * Controller class for Admin-related operations.
+ */
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -14,6 +17,13 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    /**
+     * Adds a new teacher to the system.
+     *
+     * @param data Authorization header containing the credentials of user making request.
+     * @param newTeacher DTO containing the details of new teacher to be added to the system.
+     * @return HTTP response indicating the outcome of the request.
+     */
     @PostMapping("/add-teacher")
     public ResponseEntity<?> addTeacher(
             @RequestHeader("Authorization") String data,
@@ -23,6 +33,7 @@ public class AdminController {
             if (!data.equals("Basic YWRtaW46YWRtaW4=")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
+            // Forward the request in successful case of auth to the AdminService for functionality implementation.
             return adminService.addTeacher(newTeacher);
         } catch (Exception exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());

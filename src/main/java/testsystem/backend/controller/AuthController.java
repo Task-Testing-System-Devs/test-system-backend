@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import testsystem.backend.dto.AuthRequest;
 import testsystem.backend.dto.LoginResponse;
 import testsystem.backend.dto.UserRegisterRequest;
@@ -36,6 +33,7 @@ public class AuthController {
      * @param user DTO containing the details of the new user to be registered.
      * @return HTTP response indicating the outcome of the registration request.
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
             @RequestBody UserRegisterRequest user
@@ -58,6 +56,7 @@ public class AuthController {
      * @param authRequest DTO containing the email and password of the user to be authenticated.
      * @return HTTP response containing the generated JWT token and the user's role.
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAndGetToken(
             @RequestBody AuthRequest authRequest

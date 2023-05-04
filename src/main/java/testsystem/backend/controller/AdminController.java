@@ -24,6 +24,7 @@ public class AdminController {
      * @param newTeacher DTO containing the details of new teacher to be added to the system.
      * @return HTTP response indicating the outcome of the request.
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/add-teacher")
     public ResponseEntity<?> addTeacher(
             @RequestHeader("Authorization") String data,

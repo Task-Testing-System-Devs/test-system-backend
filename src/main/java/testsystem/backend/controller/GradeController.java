@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,7 @@ public class GradeController {
      *
      * @return ResponseEntity with grades sorted by marks, or a bad request if an exception occurs.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/by-marks")
     public ResponseEntity<?> getGradesByMarks() {
         try {
@@ -51,6 +53,7 @@ public class GradeController {
      *
      * @return ResponseEntity with grades sorted by tasks amount, or a bad request if an exception occurs.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/by-tasks-amount")
     public ResponseEntity<?> getGradesByTasksAmount() {
         try {
@@ -65,6 +68,7 @@ public class GradeController {
      *
      * @return ResponseEntity with the CSV file as a FileSystemResource, or a bad request if an exception occurs.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/by-marks/download-csv")
     public ResponseEntity<?> downloadCSVRatingByMarks() {
         try {
@@ -94,6 +98,7 @@ public class GradeController {
      *
      * @return ResponseEntity with the CSV file as a FileSystemResource, or a bad request if an exception occurs.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/by-tasks-amount/download-csv")
     public ResponseEntity<?> downloadCSVRatingByTasksAmount() {
         try {

@@ -24,6 +24,7 @@ public class ProfileController {
      * @param token Authorization header containing the token.
      * @return ResponseEntity containing the student's profile information in the body or an error message if any exceptions occur.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/get-student-info")
     public ResponseEntity<?> getStudentProfileInfo(
             @RequestHeader("Authorization") String token
@@ -43,6 +44,7 @@ public class ProfileController {
      * @param token Authorization header containing the token.
      * @return ResponseEntity containing the teacher's profile information in the body or an error message if any exceptions occur.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/get-teacher-info")
     public ResponseEntity<?> getTeacherProfileInfo(
             @RequestHeader("Authorization") String token

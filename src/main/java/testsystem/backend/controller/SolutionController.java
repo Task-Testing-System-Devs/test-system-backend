@@ -25,6 +25,7 @@ public class SolutionController {
      * @param token Authorization header containing the token.
      * @return ResponseEntity with all retrieved user solutions in the response body.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/get-all")
     public ResponseEntity<?> getUserSolutions(
             @RequestHeader("Authorization") String token
@@ -44,6 +45,7 @@ public class SolutionController {
      * @param solutionDTOObject DTO object containing the user's solution details.
      * @return ResponseEntity with the adding user solution operation status.
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/add")
     public ResponseEntity<?> addUserSolution(
             @RequestHeader("Authorization") String token,

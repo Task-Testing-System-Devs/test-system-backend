@@ -26,6 +26,7 @@ public class ContestController {
      * @param contestRequest The ContestRequest DTO that holds the contest information.
      * @return ResponseEntity A response that contains the result of the operation and the HTTP status.
      */
+    @CrossOrigin(origins = "*")
     @GetMapping("/add")
     public ResponseEntity<?> getContestInfo(
             @RequestHeader("Authorization") String token,

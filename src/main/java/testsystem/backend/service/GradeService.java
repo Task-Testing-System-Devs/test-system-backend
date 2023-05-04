@@ -97,19 +97,38 @@ public class GradeService {
         List<UserInfoForRatingDownload> userInfoForRatingDownloads = new ArrayList<>();
         for (int i = 0; i < users.size(); ++i) {
             User user = users.get(i);
-            UserInfo userInfo = userInfoRepository.getUserInfoByUserId(user.getId()).orElseThrow();
+
+            UserInfo userInfo = userInfoRepository.getUserInfoByUserId(user.getId()).orElseThrow(
+                    () -> new NoSuchElementException("User info of user with email: <"
+                            + user.getEmail() + "> was not found")
+            );
+
             Optional<DepartmentConn> departmentConn = departmentConnRepository.findDepartmentConnByUserId(user.getId());
-            Optional<Department> department = departmentRepository.findById(departmentConn.orElseThrow().getDepartmentId());
-            Optional<EdGroupConn> edGroupConn = edGroupConnRepository.findEdGroupConnByDepartmentId(department.orElseThrow().getId());
-            Optional<EdGroup> edGroup = edGroupRepository.findById(edGroupConn.orElseThrow().getEdGroupId());
+            Optional<Department> department = departmentRepository.findById(departmentConn.orElseThrow(
+                    () -> new NoSuchElementException("Department of user with email: <"
+                            + user.getEmail() + "> was not found")
+            ).getDepartmentId());
+
+            Optional<EdGroupConn> edGroupConn = edGroupConnRepository.findEdGroupConnByDepartmentId(department.orElseThrow(
+                    () -> new NoSuchElementException("Educational group connection of user with email: <"
+                            + user.getEmail() + "> was not found")
+            ).getId());
+            Optional<EdGroup> edGroup = edGroupRepository.findById(edGroupConn.orElseThrow(
+                    () -> new NoSuchElementException("Educational group of user with email: <"
+                            + user.getEmail() + "> was not found")
+            ).getEdGroupId());
 
             userInfoForRatingDownloads.add(UserInfoForRatingDownload.builder()
                     .ratingPosition(i + 1)
                     .lastName(userInfo.getLastName())
                     .firstName(userInfo.getFirstName())
                     .email(user.getEmail())
-                    .department(department.get().getTitle())
-                    .groupName(edGroup.orElseThrow().getTitle())
+                    .department(department.orElseThrow(
+                            () -> new NoSuchElementException("Department was not found")
+                    ).getTitle())
+                    .groupName(edGroup.orElseThrow(
+                            () -> new NoSuchElementException("Group name was not found")
+                    ).getTitle())
                     .build());
         }
         return userInfoForRatingDownloads;
@@ -162,25 +181,52 @@ public class GradeService {
                         user.getId(),
                         new UserShortInfo(
                                 user.getEmail(), user.getRole(),
-                                userInfo.orElseThrow().getFirstName(), userInfo.orElseThrow().getLastName(),
-                                userInfo.orElseThrow().getMiddleName(), "null", "null"
+                                userInfo.orElseThrow(
+                                        () -> new NoSuchElementException("User info was not found")
+                                ).getFirstName(),
+                                userInfo.orElseThrow(
+                                        () -> new NoSuchElementException("User info was not found")
+                                ).getLastName(),
+                                userInfo.orElseThrow(
+                                        () -> new NoSuchElementException("User info was not found")
+                                ).getMiddleName(),
+                                "null",
+                                "null"
                         ))
                 );
                 continue;
             }
 
             Optional<DepartmentConn> departmentConn = departmentConnRepository.findDepartmentConnByUserId(user.getId());
-            Optional<Department> department = departmentRepository.findById(departmentConn.orElseThrow().getDepartmentId());
-            Optional<EdGroupConn> edGroupConn = edGroupConnRepository.findEdGroupConnByDepartmentId(department.orElseThrow().getId());
-            Optional<EdGroup> edGroup = edGroupRepository.findById(edGroupConn.orElseThrow().getEdGroupId());
+            Optional<Department> department = departmentRepository.findById(departmentConn.orElseThrow(
+                    () -> new NoSuchElementException("Department connection was not found")
+            ).getDepartmentId());
+            Optional<EdGroupConn> edGroupConn = edGroupConnRepository.findEdGroupConnByDepartmentId(department.orElseThrow(
+                    () -> new NoSuchElementException("Department was not found")
+            ).getId());
+            Optional<EdGroup> edGroup = edGroupRepository.findById(edGroupConn.orElseThrow(
+                    () -> new NoSuchElementException("Educational group connection was not found")
+            ).getEdGroupId());
 
             responseModels.add(new UserShortInfoPair(
                     user.getId(),
                     new UserShortInfo(
                             user.getEmail(), user.getRole(),
-                            userInfo.orElseThrow().getFirstName(), userInfo.orElseThrow().getLastName(),
-                            userInfo.orElseThrow().getMiddleName(), department.orElseThrow().getTitle(),
-                            edGroup.orElseThrow().getTitle()
+                            userInfo.orElseThrow(
+                                    () -> new NoSuchElementException("User info was not found")
+                            ).getFirstName(),
+                            userInfo.orElseThrow(
+                                    () -> new NoSuchElementException("User info was not found")
+                            ).getLastName(),
+                            userInfo.orElseThrow(
+                                    () -> new NoSuchElementException("User info was not found")
+                            ).getMiddleName(),
+                            department.orElseThrow(
+                                    () -> new NoSuchElementException("Department was not found")
+                            ).getTitle(),
+                            edGroup.orElseThrow(
+                                    () -> new NoSuchElementException("Educational group was not found")
+                            ).getTitle()
                     ))
             );
         }
@@ -214,11 +260,15 @@ public class GradeService {
         for (ContestConn contestConn : contestsOfUser) {
             Optional<Contest> contest = contestRepository.findById(contestConn.getContestId());
             Double totalForContest = 0.0;
-            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.orElseThrow().getId());
+            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.orElseThrow(
+                    () -> new NoSuchElementException("Contest was not found")
+            ).getId());
 
             for (TaskConn taskConn : taskConns) {
                 Optional<Task> task = taskRepository.findById(taskConn.getTaskId());
-                totalForContest += task.orElseThrow().getTaskGrade();
+                totalForContest += task.orElseThrow(
+                        () -> new NoSuchElementException("Task was not found")
+                ).getTaskGrade();
             }
 
             totalForContest /= taskConns.size();
@@ -241,7 +291,9 @@ public class GradeService {
 
         for (ContestConn contestConn : contestsOfUser) {
             Optional<Contest> contest = contestRepository.findById(contestConn.getContestId());
-            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.orElseThrow().getId());
+            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.orElseThrow(
+                    () -> new NoSuchElementException("Contest was not found")
+            ).getId());
             totalTasksAmount += taskConns.size();
         }
 

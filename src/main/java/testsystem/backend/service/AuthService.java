@@ -20,6 +20,8 @@ import testsystem.backend.repository.education.EdGroupRepository;
 import testsystem.backend.repository.user.UserInfoRepository;
 import testsystem.backend.repository.user.UserRepository;
 
+import java.util.NoSuchElementException;
+
 /**
  * This service class handles user authentication-related functionalities.
  */
@@ -110,6 +112,8 @@ public class AuthService {
      * @return Role of the user.
      */
     public String getRole(String email) {
-        return userRepository.findByEmail(email).orElseThrow().getRole();
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new NoSuchElementException("Role of user with email: <" + email + "> was not found")
+        ).getRole();
     }
 }

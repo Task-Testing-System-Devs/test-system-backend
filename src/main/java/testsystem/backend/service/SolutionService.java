@@ -25,10 +25,7 @@ import testsystem.backend.repository.solution.StatusRepository;
 import testsystem.backend.repository.user.UserRepository;
 import testsystem.backend.repository.user.UserSolutionsRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * This class provides the implementation for solution service.
@@ -76,24 +73,52 @@ public class SolutionService {
 
         List<SolutionDTOObject> solutions = new ArrayList<>();
         for (var userSolutionEntity : userSolutionsEntities) {
-            Optional<Solution> solution = solutionRepository.findById(userSolutionEntity.orElseThrow().getSolutionId());
+            Optional<Solution> solution = solutionRepository.findById(userSolutionEntity.orElseThrow(
+                    () -> new NoSuchElementException("User solution entity has id that doesn't exist in database")
+            ).getSolutionId());
 
-            Optional<Language> language = languageRepository.findById(solution.orElseThrow().getLanguageId());
-            Optional<Status> status = statusRepository.findById(solution.orElseThrow().getStatusId());
+            Optional<Language> language = languageRepository.findById(solution.orElseThrow(
+                    () -> new NoSuchElementException("Solution for language was not found")
+            ).getLanguageId());
+            Optional<Status> status = statusRepository.findById(solution.orElseThrow(
+                    () -> new NoSuchElementException("Solution for status was not found")
+            ).getStatusId());
 
-            Optional<UniqueContestTask> uniqueContestTask = uniqueContestTaskRepository.findById(solution.orElseThrow().getUniqueTaskId());
-            Optional<Contest> contest = contestRepository.findById(uniqueContestTask.orElseThrow().getContestId());
-            Optional<Task> task = taskRepository.findById(uniqueContestTask.orElseThrow().getTaskId());
+            Optional<UniqueContestTask> uniqueContestTask = uniqueContestTaskRepository.findById(solution.orElseThrow(
+                    () -> new NoSuchElementException("Solution for unique contest task connection was not found")
+            ).getUniqueTaskId());
+            Optional<Contest> contest = contestRepository.findById(uniqueContestTask.orElseThrow(
+                    () -> new NoSuchElementException("Solution for contest was not found")
+            ).getContestId());
+            Optional<Task> task = taskRepository.findById(uniqueContestTask.orElseThrow(
+                    () -> new NoSuchElementException("Unique contest task for task was not found")
+            ).getTaskId());
 
             SolutionDTOObject solutionResponse = SolutionDTOObject.builder()
-                    .code(solution.orElseThrow().getCode())
-                    .error_test(solution.orElseThrow().getErrorTest())
-                    .language(language.orElseThrow().getTitle())
-                    .status(status.orElseThrow().getTitle())
-                    .used_time(solution.orElseThrow().getUsedTime())
-                    .used_memory(solution.orElseThrow().getUsedMemory())
-                    .contest_name(contest.orElseThrow().getTitle())
-                    .task_name(task.orElseThrow().getTitle())
+                    .code(solution.orElseThrow(
+                            () -> new NoSuchElementException("Solution for code while DTO creation was not found")
+                    ).getCode())
+                    .error_test(solution.orElseThrow(
+                            () -> new NoSuchElementException("Solution for error test while DTO creation was not found")
+                    ).getErrorTest())
+                    .language(language.orElseThrow(
+                            () -> new NoSuchElementException("Solution for language while DTO creation was not found")
+                    ).getTitle())
+                    .status(status.orElseThrow(
+                            () -> new NoSuchElementException("Solution for status while DTO creation was not found")
+                    ).getTitle())
+                    .used_time(solution.orElseThrow(
+                            () -> new NoSuchElementException("Solution for used time while DTO creation was not found")
+                    ).getUsedTime())
+                    .used_memory(solution.orElseThrow(
+                            () -> new NoSuchElementException("Solution for used memory while DTO creation was not found")
+                    ).getUsedMemory())
+                    .contest_name(contest.orElseThrow(
+                            () -> new NoSuchElementException("Solution for contest name while DTO creation was not found")
+                    ).getTitle())
+                    .task_name(task.orElseThrow(
+                            () -> new NoSuchElementException("Solution for task name while DTO creation was not found")
+                    ).getTitle())
                     .build();
 
             solutions.add(solutionResponse);
@@ -128,7 +153,9 @@ public class SolutionService {
         statusRepository.save(status);
 
         Optional<Contest> contest = contestRepository.findByTitle(solutionDTOObject.getContest_name());
-        List<TaskConn> contestTasks = taskConnRepository.findAllByContestId(contest.orElseThrow().getId());
+        List<TaskConn> contestTasks = taskConnRepository.findAllByContestId(contest.orElseThrow(
+                () -> new NoSuchElementException("Contest for contest tasks were not found")
+        ).getId());
         Optional<Task> task = Optional.empty();
         for (var contestTask : contestTasks) {
             Optional<Task> taskOptional = taskRepository.findById(contestTask.getTaskId());
@@ -142,8 +169,12 @@ public class SolutionService {
 
         UniqueContestTask uniqueContestTask = UniqueContestTask.builder()
                 .weight(0.0)
-                .contestId(contest.orElseThrow().getId())
-                .taskId(task.orElseThrow().getId())
+                .contestId(contest.orElseThrow(
+                        () -> new NoSuchElementException("Contest for contest id while UniqueContestTask build was not found")
+                ).getId())
+                .taskId(task.orElseThrow(
+                        () -> new NoSuchElementException("Task for task id while UniqueContestTask build was not found")
+                ).getId())
                 .build();
         uniqueContestTaskRepository.save(uniqueContestTask);
 
@@ -159,7 +190,9 @@ public class SolutionService {
         solutionRepository.save(solution);
 
         UserSolution userSolutions = UserSolution.builder()
-                .userId(user.orElseThrow().getId())
+                .userId(user.orElseThrow(
+                        () -> new NoSuchElementException("User for user id while DTO creation was not found")
+                ).getId())
                 .solutionId(solution.getId())
                 .build();
         userSolutionsRepository.save(userSolutions);

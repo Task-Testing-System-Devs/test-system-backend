@@ -30,6 +30,8 @@ public class UserCredsUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
         return user.map(UserCredsUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("User " + email + " not found")
+                );
     }
 }

@@ -57,4 +57,24 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
+    /**
+     * Returns the user role based on the token header.
+     *
+     * @param token Authorization header containing the token.
+     * @return ResponseEntity containing a user role in the body or an error message if any exceptions occur.
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping("/get-role")
+    public ResponseEntity<?> getUserRole(
+            @RequestHeader("Authorization") String token
+    ) {
+        try {
+            return profileService.getUserRole(
+                    jwtService.extractUsername(token.replace("Bearer ", ""))
+            );
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
 }

@@ -17,6 +17,7 @@ import testsystem.backend.repository.education.EdGroupRepository;
 import testsystem.backend.repository.user.UserInfoRepository;
 import testsystem.backend.repository.user.UserRepository;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -126,5 +127,18 @@ public class ProfileService {
                 .build();
 
         return ResponseEntity.ok(profileInfo);
+    }
+
+    /**
+     * Retrieves the role of a user with the given email.
+     *
+     * @param email Email of the user.
+     * @return ResponseEntity with role of the user or message about error.
+     */
+    public ResponseEntity<?> getUserRole(String email) {
+        String role = userRepository.findByEmail(email).orElseThrow(
+                () -> new NoSuchElementException("Role of user with email: <" + email + "> was not found")
+        ).getRole();
+        return ResponseEntity.ok(role);
     }
 }

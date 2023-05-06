@@ -206,4 +206,52 @@ public class SolutionService {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("New solution was successfully added");
     }
+
+    /**
+     * Returns all solutions if request is from teacher for all tasks and contests in the system.
+     *
+     * @param email Email of the teacher who wants to get all solutions.
+     * @return ResponseEntity object indicating whether the operation was successful or not.
+     */
+    public ResponseEntity<?> getAllSolutions(String email) {
+        // Extract user main info.
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return ResponseEntity.badRequest().body("No user with email: <" + email + "> found");
+        }
+
+        if (!Objects.equals(user.get().getRole(), "teacher")) {
+            return ResponseEntity.badRequest().body("User with email: <" + email + "> is not a teacher and has role: <" + user.get().getRole() + ">");
+        }
+
+        List<Solution> solutions = solutionRepository.findAll();
+        if (solutions.isEmpty()) {
+            return ResponseEntity.badRequest().body("There are no solutions in system yet");
+        }
+
+        List<SolutionDTOObject> solutionsResponse = new ArrayList<>();
+        for (var solution : solutions) {
+            Optional<Language> language = languageRepository.findById(solution.getLanguageId());
+            Optional<Status> status = statusRepository.findById(solution.getStatusId());
+            solutionsResponse.add(
+                    SolutionDTOObject.builder()
+                            .id(solution.getId())
+                            .task_name("null")
+                            .contest_name("null")
+                            .code(solution.getCode())
+                            .error_test(solution.getErrorTest())
+                            .language(language.orElseThrow(
+                                    () -> new NoSuchElementException("Language is not found")
+                            ).getTitle())
+                            .status(status.orElseThrow(
+                                    () -> new NoSuchElementException("Status is not found")
+                            ).getTitle())
+                            .used_time(solution.getUsedTime())
+                            .used_memory(solution.getUsedMemory())
+                            .build()
+            );
+        }
+
+        return ResponseEntity.ok(solutionsResponse);
+    }
 }

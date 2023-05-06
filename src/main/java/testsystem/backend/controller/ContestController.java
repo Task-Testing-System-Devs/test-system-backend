@@ -42,6 +42,12 @@ public class ContestController {
         }
     }
 
+    /**
+     * This controller method gets all contests in which a specific user participates in.
+     *
+     * @param token The token from the HTTP request header.
+     * @return ResponseEntity with a list of all the contests user participates in.
+     */
     @CrossOrigin(origins = "*")
     @GetMapping("/get-all-user")
     public ResponseEntity<?> getAllUserContests(
@@ -56,6 +62,11 @@ public class ContestController {
         }
     }
 
+    /**
+     * This controller method gets all contests for all users.
+     *
+     * @return ResponseEntity with a list of all the contests in system for teacher to retrieve.
+     */
     @CrossOrigin(origins = "*")
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllContests() {

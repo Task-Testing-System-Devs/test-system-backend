@@ -26,7 +26,7 @@ public class SolutionController {
      * @return ResponseEntity with all retrieved user solutions in the response body.
      */
     @CrossOrigin(origins = "*")
-    @GetMapping("/get-all")
+    @GetMapping("/get-all-user")
     public ResponseEntity<?> getUserSolutions(
             @RequestHeader("Authorization") String token
     ) {
@@ -55,6 +55,26 @@ public class SolutionController {
             return solutionService.addUserSolution(
                     jwtService.extractUsername(token.replace("Bearer ", "")),
                     solutionDTOObject
+            );
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    /**
+     * Retrieve all solutions for the authenticated user who has a teacher role.
+     *
+     * @param token Authorization header containing the token.
+     * @return ResponseEntity containing a list of solutions or an error message.
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllSolutions(
+            @RequestHeader("Authorization") String token
+    ) {
+        try {
+            return solutionService.getAllSolutions(
+                    jwtService.extractUsername(token.replace("Bearer ", ""))
             );
         } catch (Exception exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());

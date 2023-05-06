@@ -91,6 +91,12 @@ public class ContestService {
         return ResponseEntity.status(HttpStatus.CREATED).body("New contest was successfully added to system");
     }
 
+    /**
+     * Get all contests of specified user.
+     *
+     * @param email Email address of the user to retrieve contests for.
+     * @return ResponseEntity containing a list of ContestDTOObjects or an error message.
+     */
     public ResponseEntity<?> getAllUserContests(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
@@ -140,6 +146,11 @@ public class ContestService {
         return ResponseEntity.ok(contestsResponse);
     }
 
+    /**
+     * Retrieves all contests.
+     *
+     * @return ResponseEntity containing a list of ContestDTOObjects or an error message.
+     */
     public ResponseEntity<?> getAllContests() {
         List<ContestDTOObject> contestsResponse = new ArrayList<>();
         List<Contest> contests = contestRepository.findAll();

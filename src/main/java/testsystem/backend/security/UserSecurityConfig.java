@@ -70,7 +70,7 @@ public class UserSecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .cors().and().build();
     }
 
     /**

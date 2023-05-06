@@ -12,6 +12,9 @@ import lombok.*;
 public class SolutionDTOObject {
 
     @NonNull
+    private Integer id;
+
+    @NonNull
     private String code;
 
     @NonNull

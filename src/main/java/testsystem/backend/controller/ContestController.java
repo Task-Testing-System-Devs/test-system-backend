@@ -3,7 +3,7 @@ package testsystem.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import testsystem.backend.dto.ContestRequest;
+import testsystem.backend.dto.ContestDTOObject;
 import testsystem.backend.service.ContestService;
 import testsystem.backend.service.JwtService;
 
@@ -27,16 +27,40 @@ public class ContestController {
      * @return ResponseEntity A response that contains the result of the operation and the HTTP status.
      */
     @CrossOrigin(origins = "*")
-    @GetMapping("/add")
-    public ResponseEntity<?> getContestInfo(
+    @PostMapping("/add")
+    public ResponseEntity<?> addNewContest(
             @RequestHeader("Authorization") String token,
-            @RequestBody ContestRequest contestRequest
+            @RequestBody ContestDTOObject contestRequest
             ) {
         try {
             return contestService.addContest(
                     jwtService.extractUsername(token.replace("Bearer ", "")),
                     contestRequest
             );
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/get-all-user")
+    public ResponseEntity<?> getAllUserContests(
+            @RequestHeader("Authorization") String token
+    ) {
+        try {
+            return contestService.getAllUserContests(
+                    jwtService.extractUsername(token.replace("Bearer ", ""))
+            );
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllContests() {
+        try {
+            return contestService.getAllContests();
         } catch (Exception exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }

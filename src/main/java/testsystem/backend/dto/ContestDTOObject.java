@@ -2,7 +2,7 @@ package testsystem.backend.dto;
 
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -12,16 +12,16 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContestRequest {
+public class ContestDTOObject {
 
     @NonNull
     private String title;
 
     @NonNull
-    private Timestamp start_time;
+    private LocalDateTime start_time;
 
     @NonNull
-    private Timestamp finish_time;
+    private LocalDateTime finish_time;
 
     @NonNull
     private List<TaskDTOObject> tasks;

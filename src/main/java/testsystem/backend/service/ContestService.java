@@ -5,20 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import testsystem.backend.dto.ContestRequest;
-import testsystem.backend.model.contest.Classification;
-import testsystem.backend.model.contest.Contest;
-import testsystem.backend.model.contest.Task;
-import testsystem.backend.model.contest.TaskConn;
+import testsystem.backend.dto.ContestDTOObject;
+import testsystem.backend.dto.TaskDTOObject;
+import testsystem.backend.model.contest.*;
 import testsystem.backend.model.user.User;
-import testsystem.backend.repository.contest.ClassificationRepository;
-import testsystem.backend.repository.contest.ContestRepository;
-import testsystem.backend.repository.contest.TaskConnRepository;
-import testsystem.backend.repository.contest.TaskRepository;
+import testsystem.backend.repository.contest.*;
 import testsystem.backend.repository.user.UserRepository;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * This service class handles contest-related functionalities.
@@ -36,6 +30,8 @@ public class ContestService {
     private TaskRepository taskRepository;
     @Autowired
     private TaskConnRepository taskConnRepository;
+    @Autowired
+    private ContestConnRepository contestConnRepository;
 
     /**
      * Adds a new contest to the system.
@@ -45,7 +41,7 @@ public class ContestService {
      @return ResponseEntity a response object indicating the success or failure of the request.
      */
     @Transactional
-    public ResponseEntity<?> addContest(String email, ContestRequest contestRequest) {
+    public ResponseEntity<?> addContest(String email, ContestDTOObject contestRequest) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             return ResponseEntity.badRequest().body("The user with such email does not exist");
@@ -57,8 +53,8 @@ public class ContestService {
 
         Contest contest = Contest.builder()
                 .title(contestRequest.getTitle())
-                .startTime(contestRequest.getStart_time().toLocalDateTime())
-                .finishTime(contestRequest.getFinish_time().toLocalDateTime())
+                .startTime(contestRequest.getStart_time())
+                .finishTime(contestRequest.getFinish_time())
                 .isResolvable(true)
                 .isMarkRated(true)
                 .isTaskRated(true)
@@ -93,5 +89,93 @@ public class ContestService {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body("New contest was successfully added to system");
+    }
+
+    public ResponseEntity<?> getAllUserContests(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return ResponseEntity.badRequest().body("The user with such email does not exist");
+        }
+
+        List<ContestConn> contestConns = contestConnRepository.findAllByUserId(user.get().getId());
+        List<ContestDTOObject> contestsResponse = new ArrayList<>();
+        for (var contestConn : contestConns) {
+            Optional<Contest> contest = contestRepository.findById(contestConn.getContestId());
+            if (contest.isEmpty()) {
+                return ResponseEntity.badRequest().body("Contest is not found");
+            }
+            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.orElseThrow(
+                    () -> new NoSuchElementException("Contest is not found")).getId());
+            List<TaskDTOObject> taskDTOObjects = new ArrayList<>();
+            for (var taskConn : taskConns) {
+                Optional<Task> task = taskRepository.findById(taskConn.getTaskId());
+                if (task.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Task of contest: <" + contest.get().getTitle() + "> is not found");
+                }
+                Optional<Classification> classification = classificationRepository.findById(task.get().getClassificationId());
+                if (classification.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Classification of task: <" + task.get().getTitle() + "> is not found");
+                }
+                taskDTOObjects.add(
+                        TaskDTOObject.builder()
+                                .title(task.get().getTitle())
+                                .attempts_amount(task.get().getAttemptsAmount())
+                                .description(task.get().getDescription())
+                                .memory_limit(task.get().getMemoryLimit())
+                                .time_limit(task.get().getTimeLimit())
+                                .classification_title(classification.get().getTitle())
+                                .build()
+                );
+            }
+            contestsResponse.add(
+                    ContestDTOObject.builder()
+                            .title(contest.get().getTitle())
+                            .start_time(contest.get().getStartTime())
+                            .finish_time(contest.get().getFinishTime())
+                            .tasks(taskDTOObjects)
+                            .build()
+            );
+        }
+
+        return ResponseEntity.ok(contestsResponse);
+    }
+
+    public ResponseEntity<?> getAllContests() {
+        List<ContestDTOObject> contestsResponse = new ArrayList<>();
+        List<Contest> contests = contestRepository.findAll();
+        for (var contest : contests) {
+            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.getId());
+            List<TaskDTOObject> taskDTOObjects = new ArrayList<>();
+            for (var taskConn : taskConns) {
+                Optional<Task> task = taskRepository.findById(taskConn.getTaskId());
+                if (task.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Task of contest: <" + contest.getTitle() + "> is not found");
+                }
+                Optional<Classification> classification = classificationRepository.findById(task.get().getClassificationId());
+                if (classification.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Classification of task: <" + task.get().getTitle() + "> is not found");
+                }
+                taskDTOObjects.add(
+                        TaskDTOObject.builder()
+                                .title(task.get().getTitle())
+                                .attempts_amount(task.get().getAttemptsAmount())
+                                .description(task.get().getDescription())
+                                .memory_limit(task.get().getMemoryLimit())
+                                .time_limit(task.get().getTimeLimit())
+                                .classification_title(classification.get().getTitle())
+                                .build()
+                );
+            }
+            contestsResponse.add(
+                    ContestDTOObject.builder()
+                            .title(contest.getTitle())
+                            .start_time(contest.getStartTime())
+                            .finish_time(contest.getFinishTime())
+                            .tasks(taskDTOObjects)
+                            .build()
+            );
+        }
+
+        return ResponseEntity.ok(contestsResponse);
     }
 }

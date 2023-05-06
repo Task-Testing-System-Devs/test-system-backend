@@ -6,19 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import testsystem.backend.dto.SolutionDTOObject;
-import testsystem.backend.model.contest.Contest;
-import testsystem.backend.model.contest.Task;
-import testsystem.backend.model.contest.TaskConn;
-import testsystem.backend.model.contest.UniqueContestTask;
+import testsystem.backend.model.contest.*;
 import testsystem.backend.model.solution.Language;
 import testsystem.backend.model.solution.Solution;
 import testsystem.backend.model.solution.Status;
 import testsystem.backend.model.user.User;
 import testsystem.backend.model.user.UserSolution;
-import testsystem.backend.repository.contest.ContestRepository;
-import testsystem.backend.repository.contest.TaskConnRepository;
-import testsystem.backend.repository.contest.TaskRepository;
-import testsystem.backend.repository.contest.UniqueContestTaskRepository;
+import testsystem.backend.repository.contest.*;
 import testsystem.backend.repository.solution.LanguageRepository;
 import testsystem.backend.repository.solution.SolutionRepository;
 import testsystem.backend.repository.solution.StatusRepository;
@@ -51,6 +45,8 @@ public class SolutionService {
     private TaskConnRepository taskConnRepository;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ContestConnRepository contestConnRepository;
 
     /**
      * Retrieves a list of solutions made by the user with the specified email address.
@@ -95,6 +91,9 @@ public class SolutionService {
             ).getTaskId());
 
             SolutionDTOObject solutionResponse = SolutionDTOObject.builder()
+                    .id(solution.orElseThrow(
+                            () -> new NoSuchElementException("Solution for id while DTO creation was not found")
+                    ).getId())
                     .code(solution.orElseThrow(
                             () -> new NoSuchElementException("Solution for code while DTO creation was not found")
                     ).getCode())
@@ -196,6 +195,14 @@ public class SolutionService {
                 .solutionId(solution.getId())
                 .build();
         userSolutionsRepository.save(userSolutions);
+
+        if (!contestConnRepository.existsByUserId(user.get().getId())) {
+            ContestConn contestConn = ContestConn.builder()
+                    .userId(user.get().getId())
+                    .contestId(contest.get().getId())
+                    .build();
+            contestConnRepository.save(contestConn);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body("New solution was successfully added");
     }

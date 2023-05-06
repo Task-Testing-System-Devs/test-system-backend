@@ -11,6 +11,7 @@ CREATE TABLE users
 CREATE TABLE contests
 (
     contest_id    SERIAL PRIMARY KEY,
+    ejudge_id     INTEGER      NOT NULL,
     title         varchar(250) NOT NULL,
     start_time    TIMESTAMP    NOT NULL,
     finish_time   TIMESTAMP    NOT NULL,

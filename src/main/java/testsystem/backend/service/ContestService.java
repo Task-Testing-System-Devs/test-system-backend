@@ -52,6 +52,7 @@ public class ContestService {
         }
 
         Contest contest = Contest.builder()
+                .ejudgeId(contestRequest.getEjudge_id())
                 .title(contestRequest.getTitle())
                 .startTime(contestRequest.getStart_time())
                 .finishTime(contestRequest.getFinish_time())
@@ -135,6 +136,7 @@ public class ContestService {
             }
             contestsResponse.add(
                     ContestDTOObject.builder()
+                            .ejudge_id(contest.get().getEjudgeId())
                             .title(contest.get().getTitle())
                             .start_time(contest.get().getStartTime())
                             .finish_time(contest.get().getFinishTime())
@@ -179,6 +181,7 @@ public class ContestService {
             }
             contestsResponse.add(
                     ContestDTOObject.builder()
+                            .ejudge_id(contest.getEjudgeId())
                             .title(contest.getTitle())
                             .start_time(contest.getStartTime())
                             .finish_time(contest.getFinishTime())

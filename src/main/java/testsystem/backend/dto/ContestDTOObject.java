@@ -15,6 +15,9 @@ import java.util.List;
 public class ContestDTOObject {
 
     @NonNull
+    private Integer ejudge_id;
+
+    @NonNull
     private String title;
 
     @NonNull

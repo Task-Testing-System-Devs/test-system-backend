@@ -159,6 +159,7 @@ public class ContestService {
         for (var contest : contests) {
             contestsResponse.add(
                     ContestDTOObject.builder()
+                            .id(contest.getId())
                             .ejudge_id(contest.getEjudgeId())
                             .title(contest.getTitle())
                             .start_time(contest.getStartTime())
@@ -199,6 +200,7 @@ public class ContestService {
             );
         }
         ContestDTOObject contestDTOObject = ContestDTOObject.builder()
+                        .id(contest.get().getId())
                         .ejudge_id(contest.get().getEjudgeId())
                         .title(contest.get().getTitle())
                         .start_time(contest.get().getStartTime())

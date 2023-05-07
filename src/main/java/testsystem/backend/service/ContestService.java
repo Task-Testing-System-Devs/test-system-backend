@@ -157,39 +157,55 @@ public class ContestService {
         List<ContestDTOObject> contestsResponse = new ArrayList<>();
         List<Contest> contests = contestRepository.findAll();
         for (var contest : contests) {
-            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.getId());
-            List<TaskDTOObject> taskDTOObjects = new ArrayList<>();
-            for (var taskConn : taskConns) {
-                Optional<Task> task = taskRepository.findById(taskConn.getTaskId());
-                if (task.isEmpty()) {
-                    return ResponseEntity.badRequest().body("Task of contest: <" + contest.getTitle() + "> is not found");
-                }
-                Optional<Classification> classification = classificationRepository.findById(task.get().getClassificationId());
-                if (classification.isEmpty()) {
-                    return ResponseEntity.badRequest().body("Classification of task: <" + task.get().getTitle() + "> is not found");
-                }
-                taskDTOObjects.add(
-                        TaskDTOObject.builder()
-                                .title(task.get().getTitle())
-                                .attempts_amount(task.get().getAttemptsAmount())
-                                .description(task.get().getDescription())
-                                .memory_limit(task.get().getMemoryLimit())
-                                .time_limit(task.get().getTimeLimit())
-                                .classification_title(classification.get().getTitle())
-                                .build()
-                );
-            }
             contestsResponse.add(
                     ContestDTOObject.builder()
                             .ejudge_id(contest.getEjudgeId())
                             .title(contest.getTitle())
                             .start_time(contest.getStartTime())
                             .finish_time(contest.getFinishTime())
-                            .tasks(taskDTOObjects)
                             .build()
             );
         }
 
         return ResponseEntity.ok(contestsResponse);
+    }
+
+    public ResponseEntity<?> getContestInfoById(Integer id) {
+        Optional<Contest> contest = contestRepository.findById(id);
+        if (contest.isEmpty()) {
+            return ResponseEntity.badRequest().body("The contest with such id does not exist");
+        }
+
+        List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.get().getId());
+        List<TaskDTOObject> taskDTOObjects = new ArrayList<>();
+        for (var taskConn : taskConns) {
+            Optional<Task> task = taskRepository.findById(taskConn.getTaskId());
+            if (task.isEmpty()) {
+                return ResponseEntity.badRequest().body("Task of contest: <" + contest.get().getTitle() + "> is not found");
+            }
+            Optional<Classification> classification = classificationRepository.findById(task.get().getClassificationId());
+            if (classification.isEmpty()) {
+                return ResponseEntity.badRequest().body("Classification of task: <" + task.get().getTitle() + "> is not found");
+            }
+            taskDTOObjects.add(
+                    TaskDTOObject.builder()
+                            .title(task.get().getTitle())
+                            .attempts_amount(task.get().getAttemptsAmount())
+                            .description(task.get().getDescription())
+                            .memory_limit(task.get().getMemoryLimit())
+                            .time_limit(task.get().getTimeLimit())
+                            .classification_title(classification.get().getTitle())
+                            .build()
+            );
+        }
+        ContestDTOObject contestDTOObject = ContestDTOObject.builder()
+                        .ejudge_id(contest.get().getEjudgeId())
+                        .title(contest.get().getTitle())
+                        .start_time(contest.get().getStartTime())
+                        .finish_time(contest.get().getFinishTime())
+                        .tasks(taskDTOObjects)
+                        .build();
+
+        return ResponseEntity.ok(contestDTOObject);
     }
 }

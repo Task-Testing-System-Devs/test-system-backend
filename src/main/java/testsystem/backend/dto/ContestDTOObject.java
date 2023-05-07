@@ -26,7 +26,6 @@ public class ContestDTOObject {
     @NonNull
     private LocalDateTime finish_time;
 
-    @NonNull
     private List<TaskDTOObject> tasks;
 
 }

@@ -76,4 +76,16 @@ public class ContestController {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
     }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/info")
+    public ResponseEntity<?> getContestInfoById(
+            @RequestParam("id") Integer id
+    ) {
+        try {
+            return contestService.getContestInfoById(id);
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+    }
 }

@@ -111,8 +111,7 @@ public class ContestService {
             if (contest.isEmpty()) {
                 return ResponseEntity.badRequest().body("Contest is not found");
             }
-            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.orElseThrow(
-                    () -> new NoSuchElementException("Contest is not found")).getId());
+            List<TaskConn> taskConns = taskConnRepository.findAllByContestId(contest.get().getId());
             List<TaskDTOObject> taskDTOObjects = new ArrayList<>();
             for (var taskConn : taskConns) {
                 Optional<Task> task = taskRepository.findById(taskConn.getTaskId());
@@ -136,6 +135,7 @@ public class ContestService {
             }
             contestsResponse.add(
                     ContestDTOObject.builder()
+                            .id(contest.get().getId())
                             .ejudge_id(contest.get().getEjudgeId())
                             .title(contest.get().getTitle())
                             .start_time(contest.get().getStartTime())

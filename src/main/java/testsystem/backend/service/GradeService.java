@@ -97,7 +97,9 @@ public class GradeService {
         List<UserInfoForRatingDownload> userInfoForRatingDownloads = new ArrayList<>();
         for (int i = 0; i < users.size(); ++i) {
             User user = users.get(i);
-
+            if (Objects.equals(user.getRole(), "teacher")) {
+                continue;
+            }
             UserInfo userInfo = userInfoRepository.getUserInfoByUserId(user.getId()).orElseThrow(
                     () -> new NoSuchElementException("User info of user with email: <"
                             + user.getEmail() + "> was not found")

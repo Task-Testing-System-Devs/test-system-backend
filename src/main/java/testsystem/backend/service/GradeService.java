@@ -95,6 +95,7 @@ public class GradeService {
      */
     private List<UserInfoForRatingDownload> generateUsersListForDownload(List<User> users) {
         List<UserInfoForRatingDownload> userInfoForRatingDownloads = new ArrayList<>();
+        int position = 1;
         for (int i = 0; i < users.size(); ++i) {
             User user = users.get(i);
             if (Objects.equals(user.getRole(), "teacher")) {
@@ -121,7 +122,7 @@ public class GradeService {
             ).getEdGroupId());
 
             userInfoForRatingDownloads.add(UserInfoForRatingDownload.builder()
-                    .ratingPosition(i + 1)
+                    .ratingPosition(position++)
                     .lastName(userInfo.getLastName())
                     .firstName(userInfo.getFirstName())
                     .email(user.getEmail())

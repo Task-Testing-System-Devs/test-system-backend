@@ -156,6 +156,9 @@ public class ContestService {
     public ResponseEntity<?> getAllContests() {
         List<ContestDTOObject> contestsResponse = new ArrayList<>();
         List<Contest> contests = contestRepository.findAll();
+        if (contests.isEmpty()) {
+            return ResponseEntity.badRequest().body("Contests are not found");
+        }
         for (var contest : contests) {
             contestsResponse.add(
                     ContestDTOObject.builder()

@@ -176,29 +176,12 @@ public class GradeService {
         List<UserShortInfoPair> responseModels = new ArrayList<>();
 
         for (var user : users) {
-            Optional<UserInfo> userInfo = userInfoRepository.getUserInfoByUserId(user.getId());
-
-            // If the user is a teacher, set the department and educational group fields to "null".
+            // If the user is a teacher, we do not add him to rating.
             if (Objects.equals(user.getRole(), "teacher")) {
-                responseModels.add(new UserShortInfoPair(
-                        user.getId(),
-                        new UserShortInfo(
-                                user.getEmail(), user.getRole(),
-                                userInfo.orElseThrow(
-                                        () -> new NoSuchElementException("User info was not found")
-                                ).getFirstName(),
-                                userInfo.orElseThrow(
-                                        () -> new NoSuchElementException("User info was not found")
-                                ).getLastName(),
-                                userInfo.orElseThrow(
-                                        () -> new NoSuchElementException("User info was not found")
-                                ).getMiddleName(),
-                                "null",
-                                "null"
-                        ))
-                );
                 continue;
             }
+
+            Optional<UserInfo> userInfo = userInfoRepository.getUserInfoByUserId(user.getId());
 
             Optional<DepartmentConn> departmentConn = departmentConnRepository.findDepartmentConnByUserId(user.getId());
             Optional<Department> department = departmentRepository.findById(departmentConn.orElseThrow(

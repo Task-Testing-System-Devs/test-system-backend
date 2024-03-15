@@ -29,6 +29,10 @@ public class ContestDTOObject {
     @NonNull
     private LocalDateTime finish_time;
 
+    // Difficulty can variate from 1 to 5
+    @NonNull
+    private Integer difficulty;
+
     private List<TaskDTOObject> tasks;
 
 }

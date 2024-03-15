@@ -15,6 +15,9 @@ public class TaskDTOObject {
     private String title;
 
     @NonNull
+    private Integer ejudge_id;
+
+    @NonNull
     private String description;
 
     @NonNull

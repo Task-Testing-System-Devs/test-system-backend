@@ -15,6 +15,7 @@ CREATE TABLE contests
     title         varchar(250) NOT NULL,
     start_time    TIMESTAMP    NOT NULL,
     finish_time   TIMESTAMP    NOT NULL,
+    difficulty    INTEGER      NOT NULL,
     is_resolvable BOOLEAN      NOT NULL,
     is_mark_rated BOOLEAN      NOT NULL,
     is_task_rated BOOLEAN      NOT NULL
@@ -29,6 +30,7 @@ CREATE TABLE classifications
 CREATE TABLE tasks
 (
     task_id           SERIAL PRIMARY KEY,
+    ejudge_id         INTEGER      NULL,
     title             varchar(250) NOT NULL,
     description       TEXT         NOT NULL,
     memory_limit      DECIMAL      NOT NULL,
@@ -152,8 +154,8 @@ CREATE TABLE available_languages
 CREATE TABLE tests_info
 (
     test_id     SERIAL PRIMARY KEY,
-    input_data  TEXT    NOT NULL,
-    output_data TEXT    NOT NULL,
+    input       TEXT    NOT NULL,
+    output      TEXT    NOT NULL,
     is_visible  BOOLEAN NOT NULL
 );
 

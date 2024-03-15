@@ -42,6 +42,11 @@ public class Contest {
     @Setter
     private LocalDateTime finishTime;
 
+    @Column(name = "difficulty")
+    @Getter
+    @Setter
+    private Integer difficulty;
+
     @Column(name = "is_resolvable")
     @Getter
     @Setter

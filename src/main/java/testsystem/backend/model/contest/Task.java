@@ -20,6 +20,11 @@ public class Task {
     @Setter
     private Integer id;
 
+    @Column(name = "ejudge_id")
+    @Getter
+    @Setter
+    private Integer ejudgeId;
+
     @Column(name = "title")
     @Getter
     @Setter

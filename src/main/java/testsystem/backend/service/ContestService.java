@@ -36,9 +36,9 @@ public class ContestService {
     /**
      * Adds a new contest to the system.
      *
-     @param email The email of user adding the contest.
-     @param contestRequest The ContestRequest object containing details of new contest.
-     @return ResponseEntity a response object indicating the success or failure of the request.
+     * @param email          The email of user adding the contest.
+     * @param contestRequest The ContestRequest object containing details of new contest.
+     * @return ResponseEntity a response object indicating the success or failure of the request.
      */
     @Transactional
     public ResponseEntity<?> addContest(String email, ContestDTOObject contestRequest) {
@@ -54,6 +54,7 @@ public class ContestService {
         Contest contest = Contest.builder()
                 .ejudgeId(contestRequest.getEjudge_id())
                 .title(contestRequest.getTitle())
+                .difficulty(contestRequest.getDifficulty())
                 .startTime(contestRequest.getStart_time())
                 .finishTime(contestRequest.getFinish_time())
                 .isResolvable(true)
@@ -71,6 +72,7 @@ public class ContestService {
 
             Task task = Task.builder()
                     .title(requestTask.getTitle())
+                    .ejudgeId(requestTask.getEjudge_id())
                     .description(requestTask.getDescription())
                     .memoryLimit(requestTask.getMemory_limit())
                     .timeLimit(requestTask.getTime_limit())
@@ -125,6 +127,7 @@ public class ContestService {
                 taskDTOObjects.add(
                         TaskDTOObject.builder()
                                 .title(task.get().getTitle())
+                                .ejudge_id(task.get().getEjudgeId())
                                 .attempts_amount(task.get().getAttemptsAmount())
                                 .description(task.get().getDescription())
                                 .memory_limit(task.get().getMemoryLimit())
@@ -140,6 +143,7 @@ public class ContestService {
                             .title(contest.get().getTitle())
                             .start_time(contest.get().getStartTime())
                             .finish_time(contest.get().getFinishTime())
+                            .difficulty(contest.get().getDifficulty())
                             .tasks(taskDTOObjects)
                             .build()
             );
@@ -166,6 +170,7 @@ public class ContestService {
                             .ejudge_id(contest.getEjudgeId())
                             .title(contest.getTitle())
                             .start_time(contest.getStartTime())
+                            .difficulty(contest.getDifficulty())
                             .finish_time(contest.getFinishTime())
                             .build()
             );
@@ -194,6 +199,7 @@ public class ContestService {
             taskDTOObjects.add(
                     TaskDTOObject.builder()
                             .title(task.get().getTitle())
+                            .ejudge_id(task.get().getEjudgeId())
                             .attempts_amount(task.get().getAttemptsAmount())
                             .description(task.get().getDescription())
                             .memory_limit(task.get().getMemoryLimit())
@@ -203,13 +209,14 @@ public class ContestService {
             );
         }
         ContestDTOObject contestDTOObject = ContestDTOObject.builder()
-                        .id(contest.get().getId())
-                        .ejudge_id(contest.get().getEjudgeId())
-                        .title(contest.get().getTitle())
-                        .start_time(contest.get().getStartTime())
-                        .finish_time(contest.get().getFinishTime())
-                        .tasks(taskDTOObjects)
-                        .build();
+                .id(contest.get().getId())
+                .ejudge_id(contest.get().getEjudgeId())
+                .title(contest.get().getTitle())
+                .start_time(contest.get().getStartTime())
+                .finish_time(contest.get().getFinishTime())
+                .difficulty(contest.get().getDifficulty())
+                .tasks(taskDTOObjects)
+                .build();
 
         return ResponseEntity.ok(contestDTOObject);
     }

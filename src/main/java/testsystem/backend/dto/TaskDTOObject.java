@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskDTOObject {
+    private Integer id;
 
     @NonNull
     private String title;

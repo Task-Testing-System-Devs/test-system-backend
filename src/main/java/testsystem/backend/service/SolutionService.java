@@ -102,7 +102,7 @@ public class SolutionService {
                     ).getErrorTest())
                     .language(language.orElseThrow(
                             () -> new NoSuchElementException("Solution for language while DTO creation was not found")
-                    ).getTitle())
+                    ).getId())
                     .status(status.orElseThrow(
                             () -> new NoSuchElementException("Solution for status while DTO creation was not found")
                     ).getTitle())
@@ -112,12 +112,12 @@ public class SolutionService {
                     .used_memory(solution.orElseThrow(
                             () -> new NoSuchElementException("Solution for used memory while DTO creation was not found")
                     ).getUsedMemory())
-                    .contest_name(contest.orElseThrow(
+                    .contest_id(contest.orElseThrow(
                             () -> new NoSuchElementException("Solution for contest name while DTO creation was not found")
-                    ).getTitle())
-                    .task_name(task.orElseThrow(
+                    ).getId())
+                    .task_id(task.orElseThrow(
                             () -> new NoSuchElementException("Solution for task name while DTO creation was not found")
-                    ).getTitle())
+                    ).getId())
                     .build();
 
             solutions.add(solutionResponse);
@@ -129,7 +129,7 @@ public class SolutionService {
     /**
      * Adds a new solution to the database for the specified user.
      *
-     * @param email Email of the user to add a solution for.
+     * @param email             Email of the user to add a solution for.
      * @param solutionDTOObject Solution DTO object containing the information about the solution.
      * @return ResponseEntity object indicating whether the operation was successful or not.
      */
@@ -142,7 +142,7 @@ public class SolutionService {
         }
 
         Language language = Language.builder()
-                .title(solutionDTOObject.getLanguage())
+                .id(solutionDTOObject.getLanguage())
                 .build();
         languageRepository.save(language);
 
@@ -151,7 +151,7 @@ public class SolutionService {
                 .build();
         statusRepository.save(status);
 
-        Optional<Contest> contest = contestRepository.findByTitle(solutionDTOObject.getContest_name());
+        Optional<Contest> contest = contestRepository.findById(solutionDTOObject.getContest_id());
         List<TaskConn> contestTasks = taskConnRepository.findAllByContestId(contest.orElseThrow(
                 () -> new NoSuchElementException("Contest for contest tasks were not found")
         ).getId());
@@ -159,7 +159,7 @@ public class SolutionService {
         for (var contestTask : contestTasks) {
             Optional<Task> taskOptional = taskRepository.findById(contestTask.getTaskId());
             if (taskOptional.isPresent()) {
-                if (Objects.equals(taskOptional.get().getTitle(), solutionDTOObject.getTask_name())) {
+                if (Objects.equals(taskOptional.get().getId(), solutionDTOObject.getTask_id())) {
                     task = taskOptional;
                     break;
                 }
@@ -236,13 +236,13 @@ public class SolutionService {
             solutionsResponse.add(
                     SolutionDTOObject.builder()
                             .id(solution.getId())
-                            .task_name("null")
-                            .contest_name("null")
+                            .task_id(solution.getUniqueTaskId())
+                            .contest_id(0)
                             .code(solution.getCode())
                             .error_test(solution.getErrorTest())
                             .language(language.orElseThrow(
                                     () -> new NoSuchElementException("Language is not found")
-                            ).getTitle())
+                            ).getId())
                             .status(status.orElseThrow(
                                     () -> new NoSuchElementException("Status is not found")
                             ).getTitle())

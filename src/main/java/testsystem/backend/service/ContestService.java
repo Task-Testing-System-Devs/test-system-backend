@@ -198,6 +198,7 @@ public class ContestService {
             }
             taskDTOObjects.add(
                     TaskDTOObject.builder()
+                            .id(task.get().getId())
                             .title(task.get().getTitle())
                             .ejudge_id(task.get().getEjudgeId())
                             .attempts_amount(task.get().getAttemptsAmount())

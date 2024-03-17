@@ -18,7 +18,7 @@ public class SolutionDTOObject {
     private String code;
 
     @NonNull
-    private String language;
+    private Integer language;
 
     @NonNull
     private String status;
@@ -33,9 +33,9 @@ public class SolutionDTOObject {
     private String error_test;
 
     @NonNull
-    private String contest_name;
+    private Integer contest_id;
 
     @NonNull
-    private String task_name;
+    private Integer task_id;
 
 }

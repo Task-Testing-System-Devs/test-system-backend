@@ -1,6 +1,11 @@
 ## Флоу контеста
 
-Добавляем контест - отправляем запрос на отправляем запрос на бэк со всей необходимой информацией, в ответ получаем
+Добавляем контест:
+1. Сначала отправляем запрос на создание контеста на обработчик
+
+<здесь будет ссылка на запрос на создание контеста на обработчике>
+
+2. Потом отправляем запрос на отправляем запрос на бэк со всей необходимой информацией, в ответ получаем
 сообщение о том, что все создалось или нет.
 
 http://backend-url/api/contest/add
@@ -78,16 +83,45 @@ GET http://localhost:8080/api/contest/info?id=1
       "memory_limit": 32,
       "time_limit": 2,
       "attempts_amount": 100,
-      "classification_title": "type_1"
-    }
-  ],
-  "sample_tests": [
-    {
-      "input": "1 2",
-      "output": "3"
+      "classification_title": "type_1",
+      "sample_tests": [
+        {
+          "input": "1 2",
+          "output": "3"
+        }
+      ]
     }
   ]
 }
+```
+
+### Get all contests
+
+GET http://localhost:8080/api/contest/get-all
+
+#### Response
+
+```json
+[
+    {
+        "id": 3,
+        "ejudge_id": 1,
+        "title": "Test contest",
+        "start_time": "2024-05-02T18:00:00",
+        "finish_time": "2024-05-02T18:00:00",
+        "difficulty": 1,
+        "tasks": null
+    },
+    {
+        "id": 4,
+        "ejudge_id": 1,
+        "title": "Test contest",
+        "start_time": "2024-05-02T18:00:00",
+        "finish_time": "2024-05-02T18:00:00",
+        "difficulty": 1,
+        "tasks": null
+    }
+]
 ```
 
 ### Submit a task for checking

@@ -102,7 +102,7 @@ public class SolutionService {
                     ).getErrorTest())
                     .language(language.orElseThrow(
                             () -> new NoSuchElementException("Solution for language while DTO creation was not found")
-                    ).getId())
+                    ).getTitle())
                     .status(status.orElseThrow(
                             () -> new NoSuchElementException("Solution for status while DTO creation was not found")
                     ).getTitle())
@@ -112,12 +112,12 @@ public class SolutionService {
                     .used_memory(solution.orElseThrow(
                             () -> new NoSuchElementException("Solution for used memory while DTO creation was not found")
                     ).getUsedMemory())
-                    .contest_id(contest.orElseThrow(
+                    .contest_name(contest.orElseThrow(
                             () -> new NoSuchElementException("Solution for contest name while DTO creation was not found")
-                    ).getId())
-                    .task_id(task.orElseThrow(
+                    ).getTitle())
+                    .task_name(task.orElseThrow(
                             () -> new NoSuchElementException("Solution for task name while DTO creation was not found")
-                    ).getId())
+                    ).getTitle())
                     .build();
 
             solutions.add(solutionResponse);
@@ -142,7 +142,7 @@ public class SolutionService {
         }
 
         Language language = Language.builder()
-                .id(solutionDTOObject.getLanguage())
+                .title(solutionDTOObject.getLanguage())
                 .build();
         languageRepository.save(language);
 
@@ -151,7 +151,7 @@ public class SolutionService {
                 .build();
         statusRepository.save(status);
 
-        Optional<Contest> contest = contestRepository.findById(solutionDTOObject.getContest_id());
+        Optional<Contest> contest = contestRepository.findByTitle(solutionDTOObject.getContest_name());
         List<TaskConn> contestTasks = taskConnRepository.findAllByContestId(contest.orElseThrow(
                 () -> new NoSuchElementException("Contest for contest tasks were not found")
         ).getId());
@@ -159,7 +159,7 @@ public class SolutionService {
         for (var contestTask : contestTasks) {
             Optional<Task> taskOptional = taskRepository.findById(contestTask.getTaskId());
             if (taskOptional.isPresent()) {
-                if (Objects.equals(taskOptional.get().getId(), solutionDTOObject.getTask_id())) {
+                if (Objects.equals(taskOptional.get().getTitle(), solutionDTOObject.getTask_name())) {
                     task = taskOptional;
                     break;
                 }
@@ -236,13 +236,13 @@ public class SolutionService {
             solutionsResponse.add(
                     SolutionDTOObject.builder()
                             .id(solution.getId())
-                            .task_id(solution.getUniqueTaskId())
-                            .contest_id(0)
+                            .task_name("null")
+                            .contest_name("null")
                             .code(solution.getCode())
                             .error_test(solution.getErrorTest())
                             .language(language.orElseThrow(
                                     () -> new NoSuchElementException("Language is not found")
-                            ).getId())
+                            ).getTitle())
                             .status(status.orElseThrow(
                                     () -> new NoSuchElementException("Status is not found")
                             ).getTitle())

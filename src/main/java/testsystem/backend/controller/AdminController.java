@@ -12,6 +12,7 @@ import testsystem.backend.service.AdminService;
  */
 @RestController
 @RequestMapping("/api/admin")
+@CrossOrigin(origins = "*")
 public class AdminController {
 
     @Autowired

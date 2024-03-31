@@ -11,6 +11,7 @@ import testsystem.backend.service.ProfileService;
  */
 @RestController
 @RequestMapping("/api/profile")
+@CrossOrigin(origins = "*")
 public class ProfileController {
 
     @Autowired

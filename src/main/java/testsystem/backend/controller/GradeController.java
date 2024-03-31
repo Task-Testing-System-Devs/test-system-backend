@@ -21,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/grade")
+@CrossOrigin(origins = "*")
 public class GradeController {
 
     // Constants for file names.

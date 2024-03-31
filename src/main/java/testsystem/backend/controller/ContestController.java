@@ -12,6 +12,7 @@ import testsystem.backend.service.JwtService;
  */
 @RestController
 @RequestMapping("/api/contest")
+@CrossOrigin(origins = "*")
 public class ContestController {
 
     @Autowired
